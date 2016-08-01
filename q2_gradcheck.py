@@ -28,17 +28,17 @@ def gradcheck_naive(f, x):
 
         # 1st variant
         min_value = x[ix] - h
-        f_min = f(min_value)
+        f_min, f_min_grad = f(min_value)
         max_value = x[ix] + h
-        f_max = f(max_value)
-        grad[ix] = (f_max - f_min) / 2*h
+        f_max, f_max_grad = f(max_value)
+        numgrad = (f_max - f_min) / (2 * h)
 
         # 2nd variant
-        old_value = x[ix] + h
-        x[ix] = old_value - 2*h
-        fxh = f(x)
+        old_value = x[ix]
+        x[ix] = old_value + h
+        fxh, gradh = f(x)
         x[ix] = old_value
-        grad[ix] = (fx - fxh) / 2*h
+        numgrad = (fxh - fx) / h
         ### END YOUR CODE
 
         # Compare gradients
@@ -84,30 +84,18 @@ if __name__ == "__main__":
     
 1st variant console:
 Running sanity checks...
-()
-Traceback (most recent call last):
-  File "C:/Users/root/Downloads/assignment1(1)/assignment1/q2_gradcheck.py", line 81, in <module>
-    sanity_check()
-  File "C:/Users/root/Downloads/assignment1(1)/assignment1/q2_gradcheck.py", line 63, in sanity_check
-    gradcheck_naive(quad, np.array(123.456))      # scalar test
-  File "C:/Users/root/Downloads/assignment1(1)/assignment1/q2_gradcheck.py", line 34, in gradcheck_naive
-    grad[ix] = (f_max - f_min) / 2*h
-TypeError: unsupported operand type(s) for -: 'tuple' and 'tuple'
+Gradient check passed!
+Gradient check passed!
+Gradient check passed!
 
 2nd variant console:
 Running sanity checks...
-()
-Traceback (most recent call last):
-  File "D:\Python\PyCharm Community Edition 2016.1.4\helpers\pydev\pydevd.py", line 1531, in <module>
-    globals = debugger.run(setup['file'], None, None, is_module)
-  File "D:\Python\PyCharm Community Edition 2016.1.4\helpers\pydev\pydevd.py", line 938, in run
-    pydev_imports.execfile(file, globals, locals)  # execute the script
-  File "C:/Users/root/Downloads/assignment1(1)/assignment1/q2_gradcheck.py", line 79, in <module>
-    sanity_check()
-  File "C:/Users/root/Downloads/assignment1(1)/assignment1/q2_gradcheck.py", line 61, in sanity_check
-    gradcheck_naive(quad, np.array(123.456))      # scalar test
-  File "C:/Users/root/Downloads/assignment1(1)/assignment1/q2_gradcheck.py", line 39, in gradcheck_naive
-    grad[ix] = (fx - fxh) / 2*h
-TypeError: 'numpy.float64' object does not support item assignment
+Gradient check passed!
+Gradient check failed.
+First gradient error found at index (0,)
+Your gradient: 2.378385 	 Numerical gradient: 2.378485
+Gradient check failed.
+First gradient error found at index (0, 0)
+Your gradient: 1.247125 	 Numerical gradient: 1.247225
 
 Process finished with exit code -1
